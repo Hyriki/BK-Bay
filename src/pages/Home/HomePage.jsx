@@ -35,6 +35,12 @@ export default function HomePage() {
                             {/* Uncommented and modified buttons */}
                             <div className="flex justify-center md:justify-start gap-4 animate-fade-in-up delay-400">
                                 <button 
+                                    onClick={() => navigate("/user")} // Navigate to User Details
+                                    className="px-8 py-3 bg-white text-[var(--color-primary)] font-bold rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition duration-300"
+                                >
+                                    User
+                                </button>
+                                <button 
                                     onClick={() => navigate("/shipper-details")} // Navigate to Shipper Details
                                     className="px-8 py-3 bg-white text-[var(--color-primary)] font-bold rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition duration-300"
                                 >
