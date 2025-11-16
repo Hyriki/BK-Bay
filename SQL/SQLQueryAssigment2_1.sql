@@ -406,7 +406,8 @@ VALUES
 ('RV005', 'U_BUY004', 'OI_005', 'ORD004'); -- David reviews White Shoes
 GO
 
-
+USE Assignment2
+GO
 PRINT '--- User table ---';
 SELECT * FROM [User]
 PRINT '--- Admin table ---';
