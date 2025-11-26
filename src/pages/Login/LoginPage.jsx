@@ -30,7 +30,9 @@ export default function LoginPage() {
         dateOfBirth: '',
         phoneNumber: '',
         gender: '',
-        role: 'Buyer'
+        role: 'Buyer',
+        company: '',
+        license: ''
     });
 
     // Mount animation state
@@ -293,9 +295,50 @@ export default function LoginPage() {
                                             <option value="Seller">Seller</option>
                                             <option value="Shipper">Shipper</option>
                                         </select>
-                                        
                                     </div>
                                 </div>
+
+                                {/* Company - Only for Shipper */}
+                                {formData.role === 'Shipper' && (
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-1">Company</label>
+                                        <div className="relative">
+                                            <Briefcase className="absolute left-3 top-3 text-primary" size={18} />
+                                            <select
+                                                name="company"
+                                                value={formData.company}
+                                                onChange={handleChange}
+                                                required
+                                                className="block w-full pl-10 pr-10 py-2.5 border border-slate-300 rounded-xl bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-transparent transition"
+                                            >
+                                                <option value="">Select Company</option>
+                                                <option value="GRAB">GRAB</option>
+                                                <option value="SHOPEE">SHOPEE</option>
+                                                <option value="GIAOHANGNHANH">GIAOHANGNHANH</option>
+                                                <option value="GIAOHANGTIETKIEM">GIAOHANGTIETKIEM</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* License - Only for Shipper */}
+                                {formData.role === 'Shipper' && (
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-1">License Number</label>
+                                        <div className="relative">
+                                            <Hash className="absolute left-3 top-3 text-primary" size={18} />
+                                            <input
+                                                type="text"
+                                                name="license"
+                                                required
+                                                placeholder="Enter your license number"
+                                                className="block w-full pl-10 pr-3 py-2.5 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-transparent shadow-sm transition"
+                                                value={formData.license}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Right Column */}
