@@ -22,3 +22,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Private/config files
+.env
+.env.local
+DB_As2.sql
+
+# Backend folders (separate git repos - keep locally only)
+bk-bay-backend/
+bk-bay-backend_GOOD/
