@@ -51,6 +51,10 @@ const WriteReview = () => {
     load();
   }, []);
 
+  const handleNavigateToReviews = () => {
+    navigate('/product/review');
+  };
+
   const handleSubmit = async () => {
     const selectedPurchase = purchases.find(p => p.id === selectedPurchaseId);
     if (!selectedPurchase) { setError('Vui lòng chọn sản phẩm'); return; }
@@ -63,7 +67,8 @@ const WriteReview = () => {
         rating,
         content: reviewContent
       });
-      navigate(`/product/${selectedPurchase.productId}/reviews`);
+      // Navigate after successful submission
+      handleNavigateToReviews();
     } catch (err) {
       console.error('createReview', err);
       setError(err.message || 'Gửi thất bại');
@@ -117,10 +122,9 @@ const WriteReview = () => {
           </div>
 
           <div className="p-4 border-b border-gray-50 flex gap-2">
-            <button onClick={() => {
-              const selectedPurchase = purchases.find(p => p.id === selectedPurchaseId);
-              if (selectedPurchase) navigate(`/product/${selectedPurchase.productId}/reviews`);
-            }} className="px-3 py-2 bg-gray-100 border rounded">See review</button>
+            <button onClick={handleNavigateToReviews} className="px-3 py-2 bg-gray-100 border rounded hover:bg-gray-200 transition-colors">
+              Xem đánh giá
+            </button>
             <div className="text-sm text-gray-500 self-center">Hoặc gửi đánh giá trực tiếp bên dưới.</div>
           </div>
 
