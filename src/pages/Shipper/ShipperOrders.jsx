@@ -10,6 +10,10 @@ export default function ShipperOrders() {
   const [available, setAvailable] = useState([]); // Processing orders (to claim)
   const [active, setActive] = useState([]); // Dispatched / Delivering (my current work)
   const [doing, setDoing] = useState(''); // current action indicator
+  const [updatingStatus, setUpdatingStatus] = useState({}); // track status updates
+
+  // Available statuses for shipper
+  const SHIPPER_STATUSES = ['Processing', 'Dispatched', 'Delivering', 'Delivered'];
 
   const loadAll = async () => {
     try {
@@ -66,6 +70,29 @@ export default function ShipperOrders() {
     }
   };
 
+  const handleStatusChange = async (orderId, newStatus) => {
+    setUpdatingStatus(prev => ({ ...prev, [orderId]: true }));
+    try {
+      await updateOrderStatus(orderId, newStatus);
+      await loadAll();
+    } catch (err) {
+      console.error('Update status error:', err);
+      alert(err.message || 'Failed to update order status');
+    } finally {
+      setUpdatingStatus(prev => ({ ...prev, [orderId]: false }));
+    }
+  };
+
+  const getStatusBadgeColor = (status) => {
+    const colors = {
+      'Processing': 'bg-blue-100 text-blue-800',
+      'Dispatched': 'bg-purple-100 text-purple-800',
+      'Delivering': 'bg-yellow-100 text-yellow-800',
+      'Delivered': 'bg-green-100 text-green-800',
+    };
+    return colors[status] || 'bg-gray-100 text-gray-800';
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -100,13 +127,14 @@ export default function ShipperOrders() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {available.map((o) => {
-                    const id = o.id || o.Id || o.orderId;
+                    const id = o.id || o.Id || o.orderId || o.ID;
+                    const status = o.status || o.Status;
                     return (
                       <OrderCard
                         key={id}
                         order={o}
                         actions={
-                          <div className="mt-4 flex justify-end">
+                          <div className="mt-4 flex justify-end gap-2">
                             <button
                               onClick={() => handleClaim(id)}
                               disabled={doing === id + ':claim'}
@@ -114,6 +142,16 @@ export default function ShipperOrders() {
                             >
                               {doing === id + ':claim' ? 'Claiming…' : 'Nhận đơn'}
                             </button>
+                            <select
+                              value={status}
+                              onChange={(e) => handleStatusChange(id, e.target.value)}
+                              disabled={updatingStatus[id]}
+                              className="px-3 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                            >
+                              {SHIPPER_STATUSES.map(s => (
+                                <option key={s} value={s}>{s}</option>
+                              ))}
+                            </select>
                           </div>
                         }
                       />
@@ -134,7 +172,7 @@ export default function ShipperOrders() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {active.map((o) => {
-                    const id = o.id || o.Id || o.orderId;
+                    const id = o.id || o.Id || o.orderId || o.ID;
                     const status = o.status || o.Status;
                     return (
                       <OrderCard
@@ -142,24 +180,16 @@ export default function ShipperOrders() {
                         order={o}
                         actions={
                           <div className="mt-4 flex justify-end gap-2">
-                            {status === 'Dispatched' && (
-                              <button
-                                onClick={() => handlePickup(id)}
-                                disabled={doing === id + ':pickup'}
-                                className="px-3 py-2 text-sm font-medium rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
-                              >
-                                {doing === id + ':pickup' ? 'Updating…' : 'Đã lấy hàng'}
-                              </button>
-                            )}
-                            {status === 'Delivering' && (
-                              <button
-                                onClick={() => handleDelivered(id)}
-                                disabled={doing === id + ':delivered'}
-                                className="px-3 py-2 text-sm font-medium rounded-md bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-60"
-                              >
-                                {doing === id + ':delivered' ? 'Updating…' : 'Đã giao'}
-                              </button>
-                            )}
+                            <select
+                              value={status}
+                              onChange={(e) => handleStatusChange(id, e.target.value)}
+                              disabled={updatingStatus[id]}
+                              className="px-3 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                            >
+                              {SHIPPER_STATUSES.map(s => (
+                                <option key={s} value={s}>{s}</option>
+                              ))}
+                            </select>
                           </div>
                         }
                       />

@@ -32,8 +32,8 @@ export async function claimOrder(orderId) {
 }
 
 export async function updateOrderStatus(orderId, status) {
-  const res = await fetch(`/api/shipper/orders/${orderId}/status`, {
-    method: 'PUT',
+  const res = await fetch(`/api/orders/${orderId}/status`, {
+    method: 'PATCH',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ status }),
